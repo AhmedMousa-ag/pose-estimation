@@ -1,3 +1,3 @@
-ultralytics
-opencv-python
-pydantic
+ultralytics==8.4.9
+opencv-python==4.13.0.90
+pydantic==2.12.5
