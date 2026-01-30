@@ -218,7 +218,9 @@ __marimo__/
 # Ignore model weights
 yolo26*.pt
 
-#Ignore test image
-bus.jpg
+#Ignore test image.
+*.jpg
 
 .vscode
+# Ignore test videos.
+*.mp4
