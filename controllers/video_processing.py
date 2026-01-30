@@ -7,30 +7,40 @@ from configs.config import SKELETON_CONNECTIONS
 
 
 # NOTE: The only reason I combined the logic of extracting pose estimation and writing a video in the same place is to be able to calculate the frame average time, otherwise I would have splitted it.
-def process_video(video_path: str, output_video_path) -> VideoResult:
-    video = cv2.VideoCapture(video_path)
-    if not video.isOpened():
+def process_video(video_path: str, output_video_path: str) -> VideoResult:
+    """
+    Process video frame by frame, detects pose estimation, saves annotated video and returns Video annotation results model.
+
+    Args:
+        video_path: Local path for the video to be processed.
+        output_video_path: The destination path where the annotated video will be saved.
+
+    Returns:
+        A VideoResult object containing pos estimation metadata as per the provided schema.
+    """
+    video = cv2.VideoCapture(video_path)  # Opens video.
+    if not video.isOpened():  # Check if the video is valid.
         raise FileNotFoundError(
             f"Faild to open video at path: {video_path}, please check if the video exists"
         )
-    video_metadata = __extract_video_metadata(video)
-    output_video_fbs = video_metadata.fps
-    skip_frames = False
+    video_metadata = __extract_video_metadata(video)  # Extracts video metadata.
+    output_video_fbs = video_metadata.fps  # Used for the video output.
+    skip_frames = False  # For optimization.
     if (
         video_metadata.fps > 30
     ):  # for optimization, no need to process more than 30 frames per second.
         print(f"FPS: {video_metadata.fps} and will skip half these frames.")
         skip_frames = True
-        output_video_fbs /= 2
-    output_video = cv2.VideoWriter(
+        output_video_fbs /= 2  # Since we are annotating half the frames, we should reduce the output video to the same half of frames.
+    output_video = cv2.VideoWriter(  # Annotated video that would have the output.
         output_video_path,
         cv2.VideoWriter_fourcc(*"mp4v"),
         output_video_fbs,
         (video_metadata.width, video_metadata.height),
     )
-    frame_count = 0
-    frames_metadata: List = []
-    frame_times = []
+    frame_count = 0  # Keep track of it for the metadata.
+    frames_metadata: List = []  # Will be saved with the VideoResult model.
+    frame_times = []  # Used to calculate the average frame time.
     while video.isOpened():
         if (
             skip_frames and frame_count % 2
@@ -58,7 +68,7 @@ def process_video(video_path: str, output_video_path) -> VideoResult:
     print(
         f"Processed frame time average is: {sum(frame_times)/len(frame_times):.4f} seconds "
     )
-    # 5. Clean up
+    # Clean up
     video.release()
     output_video.release()
     cv2.destroyAllWindows()
@@ -66,6 +76,7 @@ def process_video(video_path: str, output_video_path) -> VideoResult:
 
 
 def __extract_video_metadata(cap: cv2.VideoCapture) -> VideoMetadata:
+    """Extracts metadata from video and returns VideoMetadata object"""
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -74,6 +85,7 @@ def __extract_video_metadata(cap: cv2.VideoCapture) -> VideoMetadata:
 
 
 def annotate_frame(frame, frame_metadata: FrameMetadata):
+    """Annotate a frame as per the extract pose estimation."""
     # 1. Create a dictionary to look up KeyPoint objects by their name
     keypoint_map = {kp.name: kp for kp in frame_metadata.keypoints}
 

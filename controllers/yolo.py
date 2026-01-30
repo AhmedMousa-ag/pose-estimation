@@ -3,10 +3,13 @@ from configs.config import MODEL_NAME, CONF, KEYPOINTS_MAPPING
 from typing import List, Tuple
 from models.video_models import KeyPoint
 
+
+# YOLO model to be used for prediction.
 model = YOLO(MODEL_NAME)
 
 
 def get_key_points(img) -> Tuple[List[KeyPoint], float]:
+    """Takes an image, extract model prediction and returns a tuple of a list of keypoints for that frame and pose_score."""
     outputs: List[KeyPoint] = []
     results = model.predict(
         img,
@@ -25,7 +28,9 @@ def get_key_points(img) -> Tuple[List[KeyPoint], float]:
             keypoints = res.keypoints.xy.cpu().numpy()
             confidences = res.keypoints.conf.cpu().numpy()
 
-            for i, person_kpts in enumerate(keypoints):
+            for i, person_kpts in enumerate(
+                keypoints
+            ):  # NOTE: The requirements stated to have only one person, so we can actually skip this iteration.
                 # For reference on these keypoints, please visit https://docs.ultralytics.com/tasks/pose/
                 for j, (x, y) in enumerate(person_kpts):
                     conf = confidences[i][j]
