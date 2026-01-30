@@ -1,8 +1,19 @@
 from ultralytics import YOLO
-from configs.config import MODEL_NAME, CONF, KEYPOINTS_MAPPING
+from configs.config import MODEL_NAME, KEYPOINTS_MAPPING
+from configs.ml_conf import (
+    CONF,
+    IOU,
+    DEVICE,
+    HALF,
+    IMG_SIZE,
+    VERBOSE,
+    MAX_DETECTION,
+    AGNOSTIC_NMS,
+)
+
 from typing import List, Tuple
 from models.video_models import KeyPoint
-
+import torch
 
 # YOLO model to be used for prediction.
 model = YOLO(MODEL_NAME)
@@ -16,15 +27,18 @@ def get_key_points(img) -> Tuple[List[KeyPoint], float]:
         conf=CONF,
         iou=0.45,
         classes=[0],  # Person class only
-        device="cuda:0",
-        half=True,
-        verbose=False,
+        device=DEVICE,
+        half=HALF,  # 3. Only use half precision on GPU
+        imgsz=IMG_SIZE,  # Use smaller image size for faster performance
+        verbose=VERBOSE,
+        max_det=MAX_DETECTION,  # Requirements is for one person only.
+        agnostic_nms=AGNOSTIC_NMS,  # Faster NMS
     )  # predict on an image
     pose_score = 0.0
     num_poses = 1
     for res in results:
         if res.keypoints is not None:
-            # NOTE this assume we are using PyTorch
+            # To use numpy, we must move tensors from GPUs if it's on GPU to cpu.
             keypoints = res.keypoints.xy.cpu().numpy()
             confidences = res.keypoints.conf.cpu().numpy()
 

@@ -1,7 +1,11 @@
 # Use pretrained YOLO model, default value for YOLO26 Large model which should be enough for this task, you can use bigger for higher accuracy or smaller for faster results.
-MODEL_NAME = "yolo26l-pose.pt"  # "yolo26x-pose.pt"
-# Confidence score for YOLO model, anything less than 25% confidence won't be accounted.
-CONF = 0.25
+MODEL_NAME = [
+    "yolo26n-pose.pt",
+    "yolo26s-pose.pt",
+    "yolo26m-pose.pt",
+    "yolo26l-pose.pt",
+    "yolo26x-pose.pt",
+][2]
 
 # For reference on these keypoints, please visit https://docs.ultralytics.com/tasks/pose/
 # Also the document did point them out. it's needed for the YOLO output index and body part.
