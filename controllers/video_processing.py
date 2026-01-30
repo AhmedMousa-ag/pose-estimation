@@ -67,7 +67,7 @@ def process_video(video_path: str, output_video_path: str) -> VideoResult:
         print(f"Frame process time: {end_time - start_time:.4f} seconds.")
         frame_times.append(end_time - start_time)
     print(
-        f"Processed frame time average is: {sum(frame_times)/len(frame_times):.4f} seconds."
+        f"Processed frame time average is: {sum(frame_times)/len(frame_times) if len(frame_times)>0 else 0.0:.4f} seconds."
     )
     # Clean up
     video.release()
