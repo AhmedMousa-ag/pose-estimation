@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import List
 
 
+# NOTE: self described, no need to document it. Used pydantic for validation and consistency.
 class VideoMetadata(BaseModel):
     fps: int
     width: int
@@ -43,5 +44,5 @@ class VideoResult(BaseModel):
         "right_knee",
         "left_ankle",
         "right_ankle",
-    ]
+    ]  # These are the default values as per requirements.
     frames: List[FrameMetadata]
