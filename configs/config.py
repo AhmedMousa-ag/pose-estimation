@@ -24,3 +24,26 @@ KEYPOINTS_MAPPING = {
     15: "left_ankle",
     16: "right_ankle",
 }
+
+
+# LOOKUP_KEY_POINTS = {v: k for k, v in KEYPOINTS_MAPPING.items()}
+
+
+SKELETON_CONNECTIONS = [
+    ("nose", "left_eye"),
+    ("left_eye", "left_ear"),
+    ("nose", "right_eye"),
+    ("right_eye", "right_ear"),
+    ("left_shoulder", "right_shoulder"),
+    ("left_shoulder", "left_elbow"),
+    ("left_elbow", "left_wrist"),
+    ("right_shoulder", "right_elbow"),
+    ("right_elbow", "right_wrist"),
+    ("left_shoulder", "left_hip"),
+    ("right_shoulder", "right_hip"),
+    ("left_hip", "right_hip"),
+    ("left_hip", "left_knee"),
+    ("left_knee", "left_ankle"),
+    ("right_hip", "right_knee"),
+    ("right_knee", "right_ankle"),
+]
