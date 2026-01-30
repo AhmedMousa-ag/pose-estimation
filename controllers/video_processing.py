@@ -6,10 +6,11 @@ import time
 from configs.config import SKELETON_CONNECTIONS
 
 
+# NOTE: The only reason I combined the logic of extracting pose estimation and writing a video in the same place is to be able to calculate the frame average time, otherwise I would have splitted it.
 def process_video(video_path: str, output_video_path) -> VideoResult:
     video = cv2.VideoCapture(video_path)
     if not video.isOpened():
-        raise ValueError(
+        raise FileNotFoundError(
             f"Faild to open video at path: {video_path}, please check if the video exists"
         )
     video_metadata = __extract_video_metadata(video)
@@ -59,7 +60,7 @@ def process_video(video_path: str, output_video_path) -> VideoResult:
     )
     # 5. Clean up
     video.release()
-    output_video.release()  # Important: This finalizes the video file
+    output_video.release()
     cv2.destroyAllWindows()
     return VideoResult(meta=video_metadata, frames=frames_metadata)
 
@@ -74,7 +75,6 @@ def __extract_video_metadata(cap: cv2.VideoCapture) -> VideoMetadata:
 
 def annotate_frame(frame, frame_metadata: FrameMetadata):
     # 1. Create a dictionary to look up KeyPoint objects by their name
-    #    This allows O(1) access: "nose" -> KeyPoint(x=..., y=...)
     keypoint_map = {kp.name: kp for kp in frame_metadata.keypoints}
 
     # 2. Draw Skeleton Connections first (so lines are behind the dots)
