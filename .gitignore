@@ -224,3 +224,4 @@ yolo26*.pt
 .vscode
 # Ignore test videos.
 *.mp4
+*.json
