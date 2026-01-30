@@ -34,8 +34,7 @@ def get_key_points(img) -> Tuple[List[KeyPoint], float]:
         max_det=MAX_DETECTION,  # Requirements is for one person only.
         agnostic_nms=AGNOSTIC_NMS,  # Faster NMS
     )  # predict on an image
-    pose_score = 0.0
-    num_poses = 1
+    poses_scores = []
     for res in results:
         if res.keypoints is not None:
             # To use numpy, we must move tensors from GPUs if it's on GPU to cpu.
@@ -55,9 +54,10 @@ def get_key_points(img) -> Tuple[List[KeyPoint], float]:
                         )
         if res.boxes is not None and len(res.boxes) > 0:
             # Get the highest confidence detection
-            pose_score += (
-                float(res.boxes.conf.max().cpu().numpy()) / num_poses
+            poses_scores.append(
+                float(res.boxes.conf.max().cpu().numpy())
             )  # always guranteed to be at least one 1. Just calculating the average.
-            num_poses += 1
-
+    pose_score = (
+        sum(poses_scores) / float(len(poses_scores)) if len(poses_scores) > 0 else 0.0
+    )
     return outputs, pose_score
