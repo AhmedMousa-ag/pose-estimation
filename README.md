@@ -8,7 +8,7 @@ Please note that this script runs faster on GPUs and would detect it if it's ava
 
 For easier setup, you can use conda environment and run the following command after installing conda/miniconda.
 ```sh
-conda env create -f environment.yml
+conda env create -f environment.yml && conda activate pose-estimation
 ```
 
 It will use python3.13.
