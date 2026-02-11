@@ -19,7 +19,7 @@ HALF = True if DEVICE == "cuda" else False
 # Images are resized to this dimension before input to the ml model.
 # Smaller sizes faster inference but lower accuracy.
 # 320, 416, 480, 640
-IMG_SIZE = 640
+IMG_SIZE = 480
 
 # Print prediction details to console.
 VERBOSE = False
