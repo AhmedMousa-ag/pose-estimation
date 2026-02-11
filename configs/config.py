@@ -1,12 +1,12 @@
 # Use pretrained YOLO model, default value for YOLO26 Large model which should be enough for this task, you can use bigger for higher accuracy or smaller for faster results.
-MODEL_NAME = [
-    "yolo26n-pose.pt",
-    "yolo26s-pose.pt",
-    "yolo26m-pose.pt",
-    "yolo26l-pose.pt",
-    "yolo26x-pose.pt",
-][2]
-
+# MODEL_NAME = [
+#     "yolo26n-pose.pt",
+#     "yolo26s-pose.pt",
+#     "yolo26m-pose.pt",
+#     "yolo26l-pose.pt",
+#     "yolo26x-pose.pt",
+# ][0]
+MODEL_NAME = "yolov8n-pose.pt"
 # For reference on these keypoints, please visit https://docs.ultralytics.com/tasks/pose/
 # Also the document did point them out. it's needed for the YOLO output index and body part.
 KEYPOINTS_MAPPING = {

@@ -2,7 +2,6 @@ import cv2
 from controllers.yolo import get_key_points
 from models.video_models import VideoResult, VideoMetadata, FrameMetadata
 from typing import List
-import time
 from configs.config import SKELETON_CONNECTIONS
 
 
@@ -40,14 +39,12 @@ def process_video(video_path: str, output_video_path: str) -> VideoResult:
     )
     frame_count = 0  # Keep track of it for the metadata.
     frames_metadata: List = []  # Will be saved with the VideoResult model.
-    frame_times = []  # Used to calculate the average frame time.
     while video.isOpened():
         if (
             skip_frames and frame_count % 2
         ):  # for optimization, no need to process more than 30 frames per second.
             frame_count += 1
             continue
-        start_time = time.time()
         success, img = video.read()
         if not success:
             print("Video frame is empty or has been successfully processed.")
@@ -63,12 +60,6 @@ def process_video(video_path: str, output_video_path: str) -> VideoResult:
         )
         frames_metadata.append(frame_metadata)
         output_video.write(annotate_frame(img, frame_metadata))
-        end_time = time.time()
-        # print(f"Frame process time: {end_time - start_time:.4f} seconds.")
-        frame_times.append(end_time - start_time)
-    # print(
-    #     f"Processed frame time average is: {sum(frame_times)/len(frame_times) if len(frame_times)>0 else 0.0:.4f} seconds."
-    # )
     # Clean up
     video.release()
     output_video.release()
